@@ -15,18 +15,37 @@ export default {
     };
   },
   methods: {
-    editQuestion(index) {
-      // Logique pour modifier la question
-    },
-    deleteQuestion(index) {
-      this.questions.splice(index, 1);
-    },
-    addQuestion() {
-      if (this.newQuestionText.trim() !== '') {
-        this.questions.push({ text: this.newQuestionText, options: [] });
-        this.newQuestionText = '';
+    editQuestionText(id, text) {
+      const question = this.questions.find(q => q.id === id);
+      if (question) {
+        question.text = text;
       }
-    }
+      
+    },
+    addQuestion(id, text, options) {
+      this.questions.push({ id, text, options });
+    },
+    addQuestionnaire(id, nom, questions) {
+      this.questionnaire.push({ id, nom, questions });
+    },
+    addQuestionQuestionnaire(id, idQuestion) {
+      const questionnaire = this.questionnaire.find(q => q.id === id);
+      if (questionnaire) {
+        questionnaire.questions.push(idQuestion);
+      }
+    },
+    deleteQuestionQuestionnaire(id, idQuestion) {
+      const questionnaire = this.questionnaire.find(q => q.id === id);
+      if (questionnaire) {
+        questionnaire.questions.splice(idQuestion, 1);
+      }
+    },
+    deleteQuestion(id) {
+      this.questions.splice(id, 1);
+    },
+    deleteQuestionnaire(id) {
+      this.questionnaire.splice(id, 1);
+    },
   }
 };
 
