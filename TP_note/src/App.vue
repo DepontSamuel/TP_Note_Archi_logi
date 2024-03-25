@@ -1,6 +1,35 @@
-<script setup>
+<script>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+
+export default {
+  data() {
+    return {
+      questions: [
+        { id: 1, text: 'Question 1', options: ['Option 1', 'Option 2'] },
+        { id: 2, text: 'Question 2', options: ['Option 1', 'Option 2', 'Option 3'] }
+      ],
+      questionnaire: [
+        { id: 1, nom: 'Questionnaire 1', questions : [1, 2]}
+      ]
+    };
+  },
+  methods: {
+    editQuestion(index) {
+      // Logique pour modifier la question
+    },
+    deleteQuestion(index) {
+      this.questions.splice(index, 1);
+    },
+    addQuestion() {
+      if (this.newQuestionText.trim() !== '') {
+        this.questions.push({ text: this.newQuestionText, options: [] });
+        this.newQuestionText = '';
+      }
+    }
+  }
+};
+
 </script>
 
 <template>
