@@ -1,10 +1,14 @@
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import Questionnaire from './components/Questionnaire.vue';
+import Question from './components/Question.vue';
 
 export default {
   data() {
     return {
+      components: {
+        Questionnaire,
+        Question
+      },
       questions: [
         { id: 1, text: 'Question 1', options: ['Option 1', 'Option 2'] },
         { id: 2, text: 'Question 2', options: ['Option 1', 'Option 2', 'Option 3'] }
@@ -46,23 +50,30 @@ export default {
     deleteQuestionnaire(id) {
       this.questionnaire.splice(id, 1);
     },
+    getQuestionText(id) {
+      const question = this.questions.find(q => q.id === id);
+      return question ? question.text : '';
+    }
   }
 };
 
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
-    <TheWelcome />
+    <div v-for="questionnaire in questionnaire" :key="questionnaire.id">
+      <h2>{{ questionnaire.nom }}</h2>
+      <ul>
+        <li v-for="questionId in questionnaire.questions" :key="questionId">
+          {{ getQuestionText(questionId) }}
+        </li>
+      </ul>
+    </div>
   </main>
+
+  <!-- <main>
+    <TheWelcome />
+  </main> -->
 </template>
 
 <style scoped>
