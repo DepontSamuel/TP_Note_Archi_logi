@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>STEVEN LPB</h1>
+    <h1>STEVEN ET GAEL LPB</h1>
+    <button @click="home">Home</button>
     <select v-model="selectedQuestionnaireId" @change="showQuestionnaireDetails">
       <option disabled value="null">Sélectionnez un questionnaire</option>
       <option v-for="questionnaire in questionnaires" :key="questionnaire.id" :value="questionnaire.id">
@@ -38,6 +39,11 @@ export default {
       return this.questionnaires.find(q => q.id === this.selectedQuestionnaireId);
     }
   },
+  methods: {
+    home () {
+      this.selectedQuestionnaireId = null;
+    },
+  }
 };
 </script>
 
