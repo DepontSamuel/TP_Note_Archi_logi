@@ -24,7 +24,7 @@
         {{ getQuestionById(questionId).text }}
       </option>
     </select>
-    <button @click="supprimerQuestion">Supprimer</button> <!-- Correction ici -->
+    <button @click="supprimerQuestion">Supprimer</button>
   </div>
 </template>
 
