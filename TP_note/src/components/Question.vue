@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="question">
       <p class="question-text">{{ question.text }}</p>
       <ul>
         <li v-for="(option, index) in question.options" :key="index">
@@ -74,20 +74,45 @@
   </script>
   
   <style scoped>
-  /* Styles CSS */
-  .question-text {
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  
-  .option-label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .option-label input {
-    margin-right: 5px;
-  }
-  </style>
-  
+.question {
+  margin-top: 20px;
+}
+
+.question-text {
+  color: #333;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.option-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modify-section {
+  margin-top: 20px;
+}
+
+h3 {
+  color: #dc3545;
+}
+
+input[type="text"],
+select {
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #17a2b8;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+</style>
