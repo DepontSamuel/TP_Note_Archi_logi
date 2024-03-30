@@ -3,12 +3,11 @@
     <h1>STEVEN ET GAEL LPB</h1>
     <button @click="home">Home</button>
     <select v-model="selectedQuestionnaireId" @change="showQuestionnaireDetails">
-      <option disabled value="null">Sélectionnez un questionnaire</option>
       <option v-for="questionnaire in questionnaires" :key="questionnaire.id" :value="questionnaire.id">
-        {{ questionnaire.nom }}
+        {{ questionnaire.name }}
       </option>
     </select>
-    <Questionnaire v-if="selectedQuestionnaire" :questionnaire="selectedQuestionnaire" :questions="questions" />
+    <Questionnaire v-if="selectedQuestionnaire" :questionnaire="selectedQuestionnaire" @update="update"/>
     <button @click="setStatut('Delete')">Supprimer un questionnaire</button>
     <button @click="setStatut('Add')">Ajouter un questionnaire</button>
   </div>
@@ -17,7 +16,7 @@
     <select ref="questionnaireSupId">
       <option disabled value="null">Sélectionnez un questionnaire</option>
       <option v-for="questionnaire in questionnaires" :key="questionnaire.id" :value="questionnaire.id">
-        {{ questionnaire.nom }}
+        {{ questionnaire.name }}
       </option>
     </select>
     <button @click="deleteQuestionnaire">Supprimer</button>
@@ -31,7 +30,11 @@
 
 <script>
 import Questionnaire from './components/Questionnaire.vue';
-import * as api from './api.js'
+import {
+  get_all_questionnaires,
+  delete_questionnaire,
+  create_questionnaire
+} from './api.js';
 
 export default {
   components: {
@@ -39,16 +42,8 @@ export default {
   },
   data() {
     return {
-      questionnaires: [
-        { id: 1, nom: 'Questionnaire 1', questionsId: [1, 2] },
-        { id: 2, nom: 'Questionnaire 2', questionsId: [3, 4] }
-      ],
-      questions: [
-        { id: 1, text: 'Question 1', options: ['Option 1', 'Option 2'] },
-        { id: 2, text: 'Question 2', options: ['Option 1', 'Option 2', 'Option 3'] },
-        { id: 3, text: 'Question 3', options: ['Option 1', 'Option 2'] },
-        { id: 4, text: 'Question 4', options: ['Option 1', 'Option 2', 'Option 3'] }
-      ],
+      questionnaires: [],
+      questions: [],
       selectedQuestionnaireId: null,
       status : 'Default',
     };
@@ -63,21 +58,32 @@ export default {
       this.selectedQuestionnaireId = null;
       this.status = 'default';
     },
-    addQuestionnaire() {
-      const ids = this.questionnaires.map(questionnaire => questionnaire.id);
-      const new_id = Math.max.apply(null, ids) + 1;
-      const nom = this.$refs.nomQuestionnaire.value;
-      this.questionnaires.push({ new_id, nom, questionsId: [] });
-      this.selectedQuestionnaireId = new_id;
-    },
-    deleteQuestionnaire() {
-      const selectedQuestionnaireId = this.$refs.questionnaireSupId.value;
-      this.questionnaires = this.questionnaires.filter(q => q.id != selectedQuestionnaireId);
-      this.selectedQuestionnaireId = null;
-    },
     setStatut(statut) {
       this.status = statut;
     },
+    async getQuestionnaires() {
+      this.questionnaires = await get_all_questionnaires();
+      console.log("test", this.questionnaires);
+    },
+    async deleteQuestionnaire() {
+      const questionnaireId = this.$refs.questionnaireSupId.value;
+      await delete_questionnaire(questionnaireId);
+      await this.update();
+    },
+    async addQuestionnaire() {
+      const nomQuestionnaire = this.$refs.nomQuestionnaire.value;
+      const questionnaire = {
+        name: nomQuestionnaire
+      };
+      await create_questionnaire(questionnaire);
+      await this.update();
+    },
+    async update() {
+      await this.getQuestionnaires();
+    }
+  },
+  async created() {
+    await this.getQuestionnaires();
   }
 };
 </script>

@@ -2,8 +2,8 @@
   <div>
     <h2>{{ questionnaire.nom }}</h2>
     <ul>
-      <li v-for="questionId in questionnaire.questionsId" :key="questionId">
-        <Question :question="getQuestionById(questionId)" @optionSelected="optionSelected" />
+      <li v-for="question in questionnaire.questions" :key="questionId">
+        <Question :question="question" @update="update"/>
       </li>
     </ul>
     <button @click="ajouterQuestionForm">Ajouter une question</button>
@@ -12,16 +12,14 @@
   <div v-if="status === 'ajouter'">
     <h3>Ajouter une question</h3>
     <input type="text" placeholder="Question" ref="textQuestion"/>
-    <input type="text" placeholder="Option 1" ref="textChoice1"/>
-    <input type="text" placeholder="Option 2" ref="textChoice2"/>
     <button @click="ajouterQuestion">Ajouter</button>
   </div>
   <div v-if="status === 'supprimer'">
     <h3>Supprimer une question</h3>
     <select id="questionSupId">
       <option disabled value="null">Sélectionnez une question</option>
-      <option v-for="questionId in questionnaire.questionsId" :key="questionId" :value="questionId">
-        {{ getQuestionById(questionId).text }}
+      <option v-for="question in questionnaire.questions" :key="question.id" :value="question.id">
+        {{ question.title }}
       </option>
     </select>
     <button @click="supprimerQuestion">Supprimer</button>
@@ -30,6 +28,10 @@
 
 <script>
 import Question from './Question.vue';
+import {
+    create_question,
+    delete_question,
+  } from './../api.js';
 
 export default {
   data() {
@@ -45,42 +47,30 @@ export default {
     Question
   },
   methods: {
-    nextId() {
-      const ids = this.questions.map(question => question.id);
-      return Math.max.apply(null, ids) + 1;
-    },
-    getQuestionById(id) {
-      return this.questions.find(question => question.id === id);
-    },
-    optionSelected(option) {
-      console.log("Option sélectionnée :", option);
-    },
     ajouterQuestionForm() {
       this.status = 'ajouter';
     },
-    ajouterQuestion() {
-      const id = this.nextId();
+    async ajouterQuestion() {
       const textQuestion = this.$refs.textQuestion.value;
-      const textChoice1 = this.$refs.textChoice1.value;
-      const textChoice2 = this.$refs.textChoice2.value;
+      const question = {
+        title: textQuestion,
+        questionnaire_id: this.questionnaire.id
+      };
 
-      this.questions.push({
-        id: id,
-        text: textQuestion || "Question sans texte",
-        options: [textChoice1, textChoice2]
-      });
-      this.questionnaire.questionsId.push(id);
+      await create_question(question);
+      this.$emit('update');
     },
     supprimerQuestionForm() {
       this.status = 'supprimer';
     },
-    supprimerQuestion() {
-      if(questionSupId.value === "null") {
-        alert("Veuillez sélectionner une question à supprimer");
-      } else {
-        this.questionnaire.questionsId = this.questionnaire.questionsId.filter(id => id != questionSupId.value);
-      }
+    async supprimerQuestion() {
+      const questionId = document.getElementById('questionSupId').value;
+      await delete_question(questionId)
+      this.$emit('update');
     },
+    async update() {
+      this.$emit('update');
+    }
   }
 };
 </script>
