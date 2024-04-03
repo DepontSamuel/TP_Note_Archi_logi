@@ -19,6 +19,7 @@
   } from './../api.js';
 
   export default {
+    emits: ['update'],
     data() {
       return {
         status: 'default'
