@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>STEVEN ET GAEL LPB</h1>
+    <h1>MALLERON ET DEPONT</h1>
     <button @click="home">Home</button>
     <select v-model="selectedQuestionnaireId" @change="showQuestionnaireDetails">
       <option v-for="questionnaire in questionnaires" :key="questionnaire.id" :value="questionnaire.id">

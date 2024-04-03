@@ -35,8 +35,8 @@
       returnForm() {
         this.status = 'default';
       },
-      modifTitreQuestion() {
-        update_question(this.$refs.textQuestion.value, this.question.questionnaire_id, this.question.id);
+      async modifTitreQuestion() {
+        await update_question(this.$refs.textQuestion.value, this.question.questionnaire_id, this.question.id);
         this.$emit('update');
       },
     }
